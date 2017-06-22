@@ -10,18 +10,27 @@
         canvas{
             background-color: aqua;
         }
-        #input{
+
+        #text{
+            position: absolute;
+            left: 700px;
+            top: 100px;
         }
     </style>
 </head>
 <body>
-<ul id="input">
+<ul>
     <li>x0:<input data-i="x0" type="number"></li>
     <li>y0:<input data-i="y0"  type="number"></li>
     <li>x1:<input data-i="x1"  type="number"></li>
     <li>y1:<input data-i="y1"  type="number"></li>
     <li>x2:<input data-i="x2"  type="number"></li>
     <li>y2:<input data-i="y2"  type="number"></li>
+    <li>&nbsp;&nbsp;r:<input data-i="r"  type="number"></li>
+</ul>
+<ul id="text">
+    <li></li>
+    <li></li>
 </ul>
 <canvas id="demo" width="500" height="500"></canvas>
 
@@ -35,32 +44,37 @@
         y1:200,
         x2:250,
         y2:480,
+        r:50,
     drawLine(){
+        document.querySelector('#text>li:first-of-type').innerHTML=`arcTo(${this.x1},${this.y1},${this.x2},${this.y2},${this.r})`;
         demo.width=demo.width;
         ctx.strokeStyle='red';
         ctx.beginPath();
         ctx.moveTo(this.x0,this.y0);
-        ctx.arc(this.x0,this.y0,2,0,2*Math.PI);
         ctx.fill();
         ctx.fillText(`x0:${this.x0},y0:${this.y0}`,this.x0+10,this.y0-10);
-        ctx.arcTo(this.x1,this.y1,this.x2,this.y2,50);
+        ctx.arcTo(this.x1,this.y1,this.x2,this.y2,this.r);
         ctx.stroke();
 
 
-        ctx.strokeStyle='green';
+        ctx.strokeStyle='green';  
+        ctx.beginPath();
+        ctx.moveTo(this.x0,this.y0-10);
+        ctx.lineTo(this.x1,this.y1-10);
+        ctx.fillText(`x1:${this.x1},y1:${this.y1}`,this.x1+10,this.y1+10);
+        ctx.moveTo(this.x1,this.y1-10);
+        ctx.lineTo(this.x2+10,this.y2);
+        ctx.fillText(`x2:${this.x2},y2:${this.y2}`,this.x2+10,this.y2+10);
+        ctx.stroke();
+
         ctx.beginPath();
         ctx.moveTo(this.x0,this.y0);
-        ctx.lineTo(this.x1,this.y1);
-        ctx.arc(this.x1,this.y1,2,0,2*Math.PI);
-        ctx.fillText(`x1:${this.x1},y1:${this.y1}`,this.x1+10,this.y1+10);
-        ctx.stroke();
-        ctx.beginPath();
-        ctx.moveTo(this.x1,this.y1);
-        ctx.lineTo(this.x2,this.y2);
-        ctx.arc(this.x2,this.y2,2,0,2*Math.PI);
-        ctx.fillText(`x2:${this.x2},y2:${this.y2}`,this.x2+10,this.y2+10);
+        ctx.arc(this.x2+10,this.y2,2,0,2*Math.PI);
+        ctx.moveTo(this.x0,this.y0);
+        ctx.arc(this.x1,this.y1-10,2,0,2*Math.PI);
+        ctx.moveTo(this.x0,this.y0);
+        ctx.arc(this.x0,this.y0-10,2,0,2*Math.PI);
         ctx.fill();
-        ctx.stroke();
     }
 };
 arcto.drawLine();
