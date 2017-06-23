@@ -36,7 +36,7 @@
 <script>
     var demo=document.querySelector('#demo'),
     ctx=demo.getContext('2d');
-    var arcto={
+    var quadraticCurveTo={
         x0:50,
         y0:200,
         x1:250,
@@ -75,14 +75,14 @@
         ctx.fill();
     }
 };
-arcto.drawLine();
+quadraticCurveTo.drawLine();
 
 
 for(let d of document.querySelectorAll('input')){
-    d.value=arcto[d.dataset.i];
+    d.value=quadraticCurveTo[d.dataset.i];
     d.oninput=function(){
-        arcto[this.dataset.i]=+this.value;
-        arcto.drawLine();
+        quadraticCurveTo[this.dataset.i]=+this.value;
+        quadraticCurveTo.drawLine();
     }
 }
 </script>

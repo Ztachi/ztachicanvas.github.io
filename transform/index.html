@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>transform</title>
+    <style>
+        li{
+            list-style-type: none;
+        }
+        canvas{
+            background-color: aqua;
+        }
+
+        #text{
+            position: absolute;
+            left: 350px;
+            top: 80px;
+        }
+        .deg{
+            display: none;
+        }
+    </style>
+</head>
+<body>
+<ul>
+    <li>scaleX:<input data-i="scaleX" type="number"></li>
+    <li class="num">skewX:<input data-i="skewX"  type="number"></li>
+    <li class="num">skewY:<input data-i="skewY"  type="number"></li>
+    <li class="deg">skewX(deg):<input data-i="skewX"  type="number">sin度</li>
+    <li class="deg">skewY(deg):<input data-i="skewY"  type="number">sin度</li>
+    <li>scaleY:<input data-i="scaleY"  type="number"></li>
+    <li>translateX:<input data-i="translateX"  type="number"></li>
+    <li>translateY:<input data-i="translateY"  type="number"></li>
+</ul>
+<div>
+    <button>切换为度数</button>
+</div>
+<ul id="text">
+    <li></li>
+    <li>transform(scaleX,skewX,skewY,scaleY,translateX,translateY);</li>
+</ul>
+<canvas id="demo" width="700" height="700"></canvas>
+
+<script>
+    var demo=document.querySelector('#demo'),
+    context=demo.getContext('2d'),
+    deg=Math.PI/180,
+    isDeg=false;
+    var transform={
+        scaleX:1,
+        skewX:0,
+        skewY:0,
+        scaleY:1,
+        translateX:0,
+        translateY:0,
+    drawLine(){
+            document.querySelector('#text>li:first-of-type').innerHTML=`transform(${this.scaleX},${this.skewX},${this.skewY},${this.scaleY},${this.translateX},${this.translateY})`;
+            demo.width=demo.width;
+            context.save();
+            context.transform(this.scaleX,this.skewX,this.skewY,this.scaleY,this.translateX,this.translateY);
+            context.fillRect(50, 50,400,200);
+            context.restore();
+            context.strokeStyle='red';            
+            context.strokeRect(50, 50,400,200);
+    }
+};
+transform.drawLine();
+for(let d of document.querySelectorAll('input')){
+    d.value=transform[d.dataset.i];
+    d.oninput=function(){
+        if(isDeg&&this.parentNode.classList.contains('deg')){
+            transform[this.dataset.i]=Math.sin(+this.value*deg);
+            transform.drawLine();
+            return;
+        }
+        transform[this.dataset.i]=+this.value;
+        transform.drawLine();
+    }
+}
+
+document.querySelector('button').onclick=function(){
+    if(this.classList.contains('isDeg')){
+        this.innerText='切换为数字';
+        isDeg=false;
+    }else{
+        this.innerText='切换为度数';
+        isDeg=true;
+    }
+    displayInput();
+    this.classList.toggle('isDeg');
+}
+
+function displayInput(){
+    if(isDeg){
+        [...document.querySelectorAll('.num')].forEach(none);
+        [...document.querySelectorAll('.deg')].forEach(block);
+    }else{
+        [...document.querySelectorAll('.num')].forEach(block);
+        [...document.querySelectorAll('.deg')].forEach(none);
+    }
+}
+
+function none(d){
+    d.style.display='none';
+}
+
+function block(d){
+    d.style.display='block';
+}
+</script>
+</body>
+</html>
