@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>arcTo</title>
+    <title>quadraticCurveTo</title>
     <style>
         li{
             list-style-type: none;
@@ -26,11 +26,10 @@
     <li>y1:<input data-i="y1"  type="number"></li>
     <li>x2:<input data-i="x2"  type="number"></li>
     <li>y2:<input data-i="y2"  type="number"></li>
-    <li>&nbsp;&nbsp;r:<input data-i="r"  type="number"></li>
 </ul>
 <ul id="text">
     <li></li>
-    <li>可以看出x1-x0===r的时候，可以画出标准的1/4圆弧</li>
+    <li>quadraticCurveTo(x1,y1,,x2,y2)</li>
 </ul>
 <canvas id="demo" width="500" height="500"></canvas>
 
@@ -38,42 +37,41 @@
     var demo=document.querySelector('#demo'),
     ctx=demo.getContext('2d');
     var arcto={
-        x0:0,
+        x0:50,
         y0:200,
         x1:250,
         y1:200,
         x2:250,
-        y2:480,
-        r:50,
+        y2:400,
     drawLine(){
-        document.querySelector('#text>li:first-of-type').innerHTML=`arcTo(${this.x1},${this.y1},${this.x2},${this.y2},${this.r})`;
+        document.querySelector('#text>li:first-of-type').innerHTML=`quadraticCurveTo(${this.x1},${this.y1},${this.x2},${this.y2})`;
         demo.width=demo.width;
         ctx.strokeStyle='red';
         ctx.beginPath();
         ctx.moveTo(this.x0,this.y0);
         ctx.fill();
-        ctx.fillText(`x0:${this.x0},y0:${this.y0}`,this.x0+10,this.y0-10);
-        ctx.arcTo(this.x1,this.y1,this.x2,this.y2,this.r);
+        ctx.fillText(`x0:${this.x0},y0:${this.y0}`,this.x0,this.y0-10);
+        ctx.quadraticCurveTo(this.x1,this.y1,this.x2,this.y2);
         ctx.stroke();
 
 
         ctx.strokeStyle='green';  
         ctx.beginPath();
-        ctx.moveTo(this.x0,this.y0-10);
-        ctx.lineTo(this.x1,this.y1-10);
-        ctx.fillText(`x1:${this.x1},y1:${this.y1}`,this.x1+10,this.y1+10);
-        ctx.moveTo(this.x1,this.y1-10);
-        ctx.lineTo(this.x2+10,this.y2);
-        ctx.fillText(`x2:${this.x2},y2:${this.y2}`,this.x2+10,this.y2+10);
+        ctx.moveTo(this.x0,this.y0);
+        ctx.lineTo(this.x1,this.y1);
+        ctx.fillText(`x1:${this.x1},y1:${this.y1}`,this.x1,this.y1-10);
+        ctx.moveTo(this.x1,this.y1);
+        ctx.lineTo(this.x2,this.y2);
+        ctx.fillText(`x2:${this.x2},y2:${this.y2}`,this.x2+10,this.y2);
         ctx.stroke();
 
         ctx.beginPath();
         ctx.moveTo(this.x0,this.y0);
-        ctx.arc(this.x2+10,this.y2,2,0,2*Math.PI);
+        ctx.arc(this.x2,this.y2,2,0,2*Math.PI);
         ctx.moveTo(this.x0,this.y0);
-        ctx.arc(this.x1,this.y1-10,2,0,2*Math.PI);
+        ctx.arc(this.x1,this.y1,2,0,2*Math.PI);
         ctx.moveTo(this.x0,this.y0);
-        ctx.arc(this.x0,this.y0-10,2,0,2*Math.PI);
+        ctx.arc(this.x0,this.y0,2,0,2*Math.PI);
         ctx.fill();
     }
 };
