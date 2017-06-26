@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>globalCompositeOperation</title>
+    <style>
+        canvas{
+            border: 1px solid red;
+            
+        }
+        #canvasList{
+            width: 840px;
+        }
+        li{
+            list-style-type: none;
+            float: left;
+            margin-left: 20px;
+            margin-top: 20px;
+            width: 250px;
+            height: 170px;
+        }
+    </style>
+</head>
+<body>
+    context.globalCompositeOperation=<br>
+    矩形为已有图形，圆圈为新图形
+    <ul id="canvasList">
+
+    </ul>
+    <script>
+        const box=document.querySelector('#canvasList'),
+            options=[
+                ['source-over','默认值，新绘制的图形覆盖在原图上方'],
+                ['copy','只显示新的图形，删除其他图形'],
+                ['destination-in','只保留已有图行和新图形重叠的地方（只展示已有图形的内容）'],
+                ['destination-out','只保留已有图行和新图形不重叠的地方（只展示已有图形的内容）'],
+                ['destination-over','新绘制的图形覆盖在原图下方与source-over相反'],
+                ['lighter','已有图行和新图形重叠部分颜色叠加'],
+                ['source-atop','只把新图形绘制在和已有图行重叠的地方'],
+                ['source-in','只保留已有图形和新图形重叠的地方（只展示新图形的内容）'],
+                ['source-out','只保留已有图行和新图形不重叠的地方（只展示新图形的内容）'],
+                ['xor','重叠的地方变为透明']],
+            x=0,
+            y=0,
+            wid=200,
+            hei=50,
+            r=50,
+            rx=x+100,
+            ry=y+r;
+
+            options.forEach(function(d,i){
+                let id="canvas"+i;
+                box.insertAdjacentHTML('beforeend','<li><canvas id='+id+' width='+(wid+50)+' height='+(hei+50)+'></canvas><div>'+d[0]+":"+d[1]+'</div></li>');
+                let context=document.querySelector('#'+id).getContext('2d');
+                context.fillStyle='#00dd00';
+                context.fillRect(x,y,wid,hei);
+                context.globalCompositeOperation=d[0];
+                context.beginPath();
+                context.fillStyle='#dd00dd';
+                context.arc(rx,ry, r, 0, Math.PI*2);
+                context.fill();
+                
+            });
+            
+            
+    </script>
+</body>
+</html>
