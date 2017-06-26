@@ -1,78 +1,173 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>画板</title>
     <style>
-    *{
-        margin: 0;
-        padding: 0;
-    }
-    body{
-        min-width: 1200px;
-    }
-    li{
-        list-style-type: none;
-    }
-    #options{
-        border-bottom: 1px solid #ccc;
-        padding: 10px;
-        overflow: hidden;
-    }
-    #options>li{
-        float: left;
-        margin-left: 15px;
-        width: 120px;
-    }
-    #options>li>input{
-        width: 40px;
-    }
-    #drawBoard{
-        display: block;
-        border-radius: 10px;
-        border: 1px solid #ccc;
-        margin: 10px auto 0;
-    }
+        * {
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            min-width: 1200px;
+        }
+
+        li {
+            list-style-type: none;
+        }
+
+        #options {
+            border-bottom: 1px solid #ccc;
+            padding: 10px;
+            overflow: hidden;
+        }
+
+        #options>li {
+            float: left;
+            margin-left: 15px;
+            width: 120px;
+            position: relative;
+        }
+
+        #options>li>input {
+            width: 40px;
+        }
+
+        #options>li>input[type='checkBox'] {
+            position: absolute;
+            right: 0;
+            top: 3px;
+            height: 15px;
+            width: 15px;
+        }
+
+        #drawBoard {
+            border-radius: 10px;
+            border: 1px solid #ccc;
+        }
+
+        #box {
+            position: relative;
+            width: 1024px;
+            margin: 10px auto 0;
+        }
+
+        #eraserBox {
+            position: absolute;
+            width: 3px;
+            height: 3px;
+            border: 1px solid #000;
+            display: none;
+        }
     </style>
 </head>
+
 <body>
     <ul id="options">
         <li>画笔颜色:<input type="color" id="penColor"></li>
         <li>画笔粗细:<input type="number" id="lineWidth"></li>
+        <li>橡皮擦: <select id="eraser">
+            <option value="min">小</option>
+            <option value="med">中</option>
+            <option value="big">大</option>
+        </select>
+            <input type="checkBox">
+        </li>
     </ul>
-    <canvas id="drawBoard" width="1024" height="768"></canvas>
+    <div id="box">
+        <div id="eraserBox"></div>
+        <canvas id="drawBoard" width="1024" height="768"></canvas>
+    </div>
     <script>
-        const canvas=document.querySelector('#drawBoard'),
-        context=canvas.getContext('2d');        
-        const draw={
-                x:0,//画笔横坐标
-                y:0,//画笔纵坐标
-                mousedown(e){//按下鼠标左键记录坐标
-                    x=e.pageX-10;
-                    y=e.pageY-10;
-                },
-                mouseup(){//放开鼠标左键关闭绘制
-                    this.off.call(canvas,'mousemove',this.draw);
-                },
-                draw(e){
-                    let x1=e.pageX-10,
-                    y1=e.pageY-10;
+        const $canvas = document.querySelector('#drawBoard'),
+            context = $canvas.getContext('2d'),
+            $eraser = document.querySelector("#eraser+input"),
+            $eraserBox = document.querySelector("#eraserBox");
+        var x = 0, //鼠标横坐标
+            y = 0; //鼠标纵坐标
 
-                    context.beginPath();
-                    context.strokeStyle=document.querySelector('#penColor').value;
-                    
-                    context.moveTo(this.x,this.y);
-                    context.lineTo(x1, y1);
-                    
-                },
-                off(name,fun){//关闭事件
-                    this.removeEventListener(name,fun);
-                }
+        var eraserSize = 5; //橡皮擦大小    
+
+        function getCurrentMap(e) { //获取当前鼠标位置
+            return {
+                x: e.layerX,
+                y: e.layerY
+            };
         }
-        canvas.addEventListener('mousedown',draw.mousedown);
-        canvas.addEventListener('mouseup',draw.mouseup);
+
+        function mousedown(e) { //按下鼠标左键记录坐标
+            var map = getCurrentMap(e);
+            x = map.x,
+                y = map.y;
+            if ($eraser.checked) {
+                $eraserBox.style.width = eraserSize - 2 + 'px';
+                $eraserBox.style.height = eraserSize - 2 + 'px';
+                $eraserBox.style.top = x - eraserSize / 2 + 'px';
+                $eraserBox.style.left = y - eraserSize / 2 + 'px';
+                $eraserBox.style.display = 'block';
+            }
+            $canvas.addEventListener('mousemove', $eraser.checked ? eraser : draw);
+        }
+
+        function mouseup() { //放开鼠标左键关闭绘制
+            $eraserBox.style.display = 'none';
+            $canvas.removeEventListener('mousemove', $eraser.checked ? eraser : draw);
+        }
+
+        function draw(e) { //绘制线条
+            let {
+                x: x1,
+                y: y1
+            } = getCurrentMap(e);
+
+            context.beginPath();
+            context.strokeStyle = document.querySelector('#penColor').value;
+            context.lineWidth = document.querySelector('#lineWidth').value || 2;
+            context.lineCap = 'round';
+            context.moveTo(x, y);
+            context.lineTo(x1, y1);
+            context.stroke();
+            x = x1;
+            y = y1;
+        }
+
+        function eraser(e) { //擦除线条
+            let {
+                x: x1,
+                y: y1
+            } = getCurrentMap(e);
+            $eraserBox.style.top = y1 - eraserSize / 2 + 'px';
+            $eraserBox.style.left = x1 - eraserSize / 2 + 'px';
+            context.clearRect(x1 - eraserSize / 2, y1 - eraserSize / 2, eraserSize, eraserSize);
+        }
+        $canvas.addEventListener('mousedown', mousedown);
+        $canvas.addEventListener('mouseup', mouseup);
+        $eraserBox.addEventListener('mouseup', mouseup);
+        document.querySelector('#eraser').addEventListener('change', function () {
+            switch (this.value) {
+                case 'min':
+                    eraserSize = 5;
+                    break;
+                case 'men':
+                    eraserSize = 10;
+                    break;
+                case 'big':
+                    eraserSize = 20;
+                    break;
+            }
+        });
+
+        $eraser.addEventListener('change', function () {
+            if (!this.checked) {
+                $eraserBox.style.display = 'none';
+            }
+            $canvas.removeEventListener('mousemove', this.checked ? draw : eraser);
+        })
     </script>
 </body>
+
 </html>
