@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>画板</title>
+    <style>
+    *{
+        margin: 0;
+        padding: 0;
+    }
+    body{
+        min-width: 1200px;
+    }
+    li{
+        list-style-type: none;
+    }
+    #options{
+        border-bottom: 1px solid #ccc;
+        padding: 10px;
+        overflow: hidden;
+    }
+    #options>li{
+        float: left;
+        margin-left: 15px;
+        width: 120px;
+    }
+    #options>li>input{
+        width: 40px;
+    }
+    #drawBoard{
+        display: block;
+        border-radius: 10px;
+        border: 1px solid #ccc;
+        margin: 10px auto 0;
+    }
+    </style>
+</head>
+<body>
+    <ul id="options">
+        <li>画笔颜色:<input type="color" id="penColor"></li>
+        <li>画笔粗细:<input type="number" id="lineWidth"></li>
+    </ul>
+    <canvas id="drawBoard" width="1024" height="768"></canvas>
+    <script>
+        const canvas=document.querySelector('#drawBoard'),
+        context=canvas.getContext('2d');        
+        const draw={
+                x:0,//画笔横坐标
+                y:0,//画笔纵坐标
+                mousedown(e){//按下鼠标左键记录坐标
+                    x=e.pageX-10;
+                    y=e.pageY-10;
+                },
+                mouseup(){//放开鼠标左键关闭绘制
+                    this.off.call(canvas,'mousemove',this.draw);
+                },
+                draw(e){
+                    let x1=e.pageX-10,
+                    y1=e.pageY-10;
+
+                    context.beginPath();
+                    context.strokeStyle=document.querySelector('#penColor').value;
+                    
+                    context.moveTo(this.x,this.y);
+                    context.lineTo(x1, y1);
+                    
+                },
+                off(name,fun){//关闭事件
+                    this.removeEventListener(name,fun);
+                }
+        }
+        canvas.addEventListener('mousedown',draw.mousedown);
+        canvas.addEventListener('mouseup',draw.mouseup);
+    </script>
+</body>
+</html>
