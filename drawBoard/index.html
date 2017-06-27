@@ -45,6 +45,13 @@
             width: 15px;
         }
 
+        #clearCnvas {
+            display: block;
+            width: 100%;
+            text-align: center;
+            height: 25px;
+        }
+
         #drawBoard {
             display: block;
             border-radius: 10px;
@@ -56,6 +63,7 @@
 
 <body>
     <ul id="options">
+        <li><button id="clearCnvas" type="button">清空画布</button></li>
         <li>画笔颜色:<input type="color" id="penColor"></li>
         <li>画笔粗细:<input type="number" id="lineWidth"></li>
         <li>橡皮擦: <select id="eraser">
@@ -117,9 +125,9 @@
 
         const eraser = {
             lastEraserX: 0,
-            lastEraserY: 0,//保存的橡皮擦坐标
-            size : 5, //橡皮擦大小
-            skew:1,
+            lastEraserY: 0, //保存的橡皮擦坐标
+            size: 5, //橡皮擦大小
+            skew: 1,
             clearLine(e) { //擦除线条
                 let {
                     x: x1,
@@ -135,9 +143,9 @@
                     y: y1
                 } = getCurrentMap(e);
                 this.lastEraserX = x1 - eraser.size / 2;
-                this.lastEraserY = y1 - eraser.size / 2;//记录绘制坐标，待下一次回执之后擦除这一次
+                this.lastEraserY = y1 - eraser.size / 2; //记录绘制坐标，待下一次回执之后擦除这一次
                 context.beginPath();
-                context.lineWidth=1;
+                context.lineWidth = 1;
                 context.strokeRect(eraser.lastEraserX, eraser.lastEraserY, eraser.size, eraser.size);
             },
             clearEraser() {
@@ -146,7 +154,7 @@
         }
 
 
-  document.querySelector('#eraser').addEventListener('change', function () {
+        document.querySelector('#eraser').addEventListener('change', function () {
             switch (this.value) {
                 case 'min':
                     eraser.size = 5;
@@ -159,13 +167,17 @@
                     break;
             }
         });
-        
+
         $canvas.addEventListener('mousedown', mousedown);
         $canvas.addEventListener('mouseup', mouseup);
         $eraser.addEventListener('change', function () {
             $canvas.removeEventListener('mousemove', this.checked ? draw : eraser.clearLine);
         })
-
+        document.querySelector('#clearCnvas').onclick=function(){
+            if(confirm('确定清空画布？')){
+                $canvas.width=$canvas.width;
+            }
+        }
     </script>
 </body>
 
