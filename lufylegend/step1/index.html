@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>step1</title>
+    <style>
+        *{
+            margin: 0;
+            padding: 0;
+        }
+        canvas {
+            background-color: skyblue;
+        }
+    </style>
+    <script src="../lufylegend-1.10.1.min.js"></script>
+</head>
+
+<body>
+    <div id="start">loding......</div>
+    <script>
+        var loader={};
+        init(60, 'start', 500, 500, showImg);
+        function showImg(){
+            loader=new LLoader();
+            loader.addEventListener(LEvent.COMPLETE,loadBitmapdata);
+            loader.load('../img/timg.jpg','bitmapData');
+        }
+
+        function loadBitmapdata(e){
+            var bitmapData=new LBitmapData(loader.content,200,200,300,300);
+            var bitmap=new LBitmap(bitmapData);
+            bitmap.x=100;
+            bitmap.rotate=45;
+            bitmap.alpha=.5;
+            bitmap.scaleX=.9;
+            addChild(bitmap);
+        }
+    </script>
+</body>
+
+</html>
