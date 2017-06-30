@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>clearRect清除区域</title>
+    <style>
+    *{
+        margin: 0;
+        padding: 0;
+    }
+    #canvas{
+        background-color: skyblue;
+    }
+    </style>
+</head>
+<body>
+    <canvas id="canvas" width="500" height="500"></canvas>
+    <script>
+        const context=document.querySelector("#canvas").getContext('2d');
+        context.moveTo(50, 50);
+        context.lineTo(100, 50);
+        context.lineTo(100, 100);
+        context.lineTo(50, 100);
+        context.closePath();
+        context.stroke();   
+        context.clearRect(50, 50, 50, 50);
+        context.fillText('line', 50, 40);
+        
+        
+        context.fillRect(150,50,50,50);
+        context.clearRect(150,50,50,50);
+        context.fillText('fillRect', 150, 40);
+
+        context.strokeRect(250, 50, 50, 50);
+        context.clearRect(250, 50, 50, 50);
+        context.fillText('strokeRect', 250, 40);
+
+        context.lineWidth=5;    
+        context.strokeRect(350, 50, 50, 50);
+        context.clearRect(350, 50, 50, 50);
+        context.fillText('strokeRect,lineWidth=5', 350, 40);
+
+        context.lineWidth=1;
+        context.beginPath();
+        context.moveTo(50, 150);
+        context.lineTo(100, 150);
+        context.lineTo(100, 200);
+        context.lineTo(50, 200);
+        context.closePath();
+        context.stroke();   
+        context.clearRect(50-1, 150-1, 50+2, 50+2);
+        context.fillText('line,坐标-1宽度+2', 20, 140);
+
+        context.lineWidth=2;
+        context.beginPath();
+        context.moveTo(150, 150);
+        context.lineTo(200, 150);
+        context.lineTo(200, 200);
+        context.lineTo(150, 200);
+        context.closePath();
+        context.stroke();   
+        context.clearRect(150-1, 150-1, 50+2, 50+2);
+        context.fillText('linewidth=2,坐标-1宽度+2', 130, 140);
+        context.fillText('综上，无法清理1px边框，就是因为1px模糊问题', 130, 210);
+    </script>
+</body>
+</html>
