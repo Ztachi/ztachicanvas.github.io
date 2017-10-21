@@ -32,11 +32,14 @@
         function loadBitmapdata(e){
             var bitmapData=new LBitmapData(loader.content,200,200,300,300);
             var bitmap=new LBitmap(bitmapData);
-            bitmap.x=100;
-            bitmap.rotate=45;
-            bitmap.alpha=.5;
-            bitmap.scaleX=.9;
-            addChild(bitmap);
+            // bitmap.x=100;
+            // bitmap.rotate=45;
+            // bitmap.alpha=.5;
+            // bitmap.scaleX=.9;
+              //addChild(bitmap);
+            var layer=new LSprite();
+            addChild(layer);
+            layer.addChild(bitmap);
         }
     </script>
 </body>
